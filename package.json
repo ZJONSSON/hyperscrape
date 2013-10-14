@@ -1,0 +1,22 @@
+{
+  "name": "hyperscrape",
+  "version": "0.0.0",
+  "description": "Streaming high performance scraper",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ZJONSSON/hyperscrape.git"
+  },
+  "author": "Ziggy Jonsson <ziggy.jonsson.nyc@gmail.com> (https://github.com/zjonsson/)",
+  "bugs": {
+    "url": "https://github.com/ZJONSSON/hyperscrape/issues"
+  },
+  "dependencies": {
+    "hyperquest": "~0.1.8",
+    "cheerio": "~0.12.3",
+    "streamz": "0.0.5"
+  }
+}
