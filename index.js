@@ -22,17 +22,18 @@ module.exports = function(concurrent,opt) {
     var bufferStream = streamz(function(d,cb) {
       buffer +=d;
       cb();
-    });
+    })
+    .on("finish",callback);
 
     bufferStream._flush = function(cb) {
       res.body = buffer;
       res.$ = cheerio.load(buffer);
       self.push(res);
-      callback();
+      cb();
     };
 
     hyperquest(url.url,opt)
-      .on('error',function(e) { self.emit('error',e); }
+      .on('error',function(e) { self.emit('error',e); })
       .pipe(bufferStream);
       
   },concurrent);
