@@ -3,9 +3,9 @@ var hyperquest = require("hyperquest"),
     streamz = require("streamz");
 
 function clone(d,e) {
-  function C() {}
-  C.prototype = d;
-  return new C();
+  e = e || {};
+  e.__proto__ = d;
+  return e;
 }
 
 module.exports = clone;
@@ -16,7 +16,7 @@ module.exports = function(concurrent,opt) {
         buffer = "",
         res;
 
-    if (url.url) res = clone(url);
+    if (url.url) res = (opt && opt.clone) ? clone(url) : url;
     else res = {url:url};
 
     var bufferStream = streamz(function(d,cb) {
@@ -32,7 +32,7 @@ module.exports = function(concurrent,opt) {
       cb();
     };
 
-    hyperquest(url.url,opt)
+    hyperquest(res.url,opt)
       .on('error',function(e) { self.emit('error',e); })
       .pipe(bufferStream);
       
