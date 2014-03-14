@@ -1,6 +1,6 @@
 {
   "name": "hyperscrape",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Streaming high performance scraper",
   "main": "index.js",
   "scripts": {
@@ -17,6 +17,6 @@
   "dependencies": {
     "hyperquest": "~0.1.8",
     "cheerio": "~0.12.3",
-    "streamz": "0.0.5"
+    "streamz": "~0.2.5"
   }
 }
