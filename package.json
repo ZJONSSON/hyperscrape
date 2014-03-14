@@ -1,6 +1,6 @@
 {
   "name": "hyperscrape",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "Streaming high performance scraper",
   "main": "index.js",
   "scripts": {
@@ -15,7 +15,7 @@
     "url": "https://github.com/ZJONSSON/hyperscrape/issues"
   },
   "dependencies": {
-    "hyperquest": "~0.1.8",
+    "request": "^2.34.0",
     "cheerio": "~0.12.3",
     "streamz": "~0.2.5"
   }

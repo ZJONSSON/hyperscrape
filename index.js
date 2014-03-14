@@ -1,6 +1,10 @@
-var hyperquest = require("hyperquest"),
+var request = require("request"),
     cheerio = require("cheerio"),
-    streamz = require("streamz");
+    streamz = require("streamz"),
+    zlib = require('zlib'),
+    http = require('http');
+
+http.globalAgent.maxSockets = Infinity;
 
 function clone(d,e) {
   e = e || {};
@@ -8,16 +12,23 @@ function clone(d,e) {
   return e;
 }
 
-module.exports = clone;
+module.exports = function(cap,opt) {
+  opt = opt || {};
+  opt.cap = cap;
 
-module.exports = function(concurrent,opt) {
-  return streamz(function(url,callback) {
+  return streamz(function(item,callback) {
     var self = this,
-        buffer = "",
-        res;
+        buffer = "";
 
-    if (url.url) res = (opt && opt.clone) ? clone(url) : url;
-    else res = {url:url};
+    if (item.url && !opt.noClone) item = clone(item);
+    else item = {url:url};
+
+    // Hardcode the url just in case it was cloned (request requires this)
+    item.url = item.url ;
+
+    // Make gzip,deflate a default encoding
+    item.headers = item.headers || {};
+    item.headers['Accept-Encoding'] = item.headers['Accept-Encoding'] || 'gzip,deflate';
 
     var bufferStream = streamz(function(d,cb) {
       buffer +=d;
@@ -26,15 +37,21 @@ module.exports = function(concurrent,opt) {
     .on("finish",callback);
 
     bufferStream._flush = function(cb) {
-      res.body = buffer;
-      res.$ = cheerio.load(buffer);
-      self.push(res);
+      item.response = buffer;
+      item.$ = cheerio.load(buffer);
+      self.push(item);
       cb();
     };
 
-    hyperquest(res.url,opt)
-      .on('error',function(e) { self.emit('error',e); })
-      .pipe(bufferStream);
-      
-  },concurrent);
+    request(item)
+      .on('response', function (res) {
+        if (res.statusCode !== 200) return self.emit('error',res.statusCode);
+        item.responseHeaders = res.headers;
+        var encoding = res.headers['content-encoding'];
+        if (encoding === 'gzip') res = res.pipe(zlib.createGunzip());
+        if (encoding == 'deflate') res = res.pipe(zlib.createInflate());
+        res.pipe(bufferStream);
+      })
+      .on('error',function(e) { self.emit('error',e); });
+  },opt);
 };
