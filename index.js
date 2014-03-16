@@ -39,12 +39,11 @@ module.exports = function(cap,opt) {
     bufferStream._flush = function(cb) {
       item.response = buffer;
       item.$ = cheerio.load(buffer);
-      if (opt.transform) {
-        opt.transform(item,cb);
-      } else {
+      if (opt.transform)
+        opt.transform.call(this,item);
+      else
         self.push(item);
-        cb();
-      }
+      cb();
     };
 
     request(item)
