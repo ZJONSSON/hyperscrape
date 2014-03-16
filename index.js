@@ -21,7 +21,7 @@ module.exports = function(cap,opt) {
         buffer = "";
 
     if (item.url && !opt.noClone) item = clone(item);
-    else item = {url:url};
+    else item = {url:item};
 
     // Hardcode the url just in case it was cloned (request requires this)
     item.url = item.url ;
@@ -39,8 +39,12 @@ module.exports = function(cap,opt) {
     bufferStream._flush = function(cb) {
       item.response = buffer;
       item.$ = cheerio.load(buffer);
-      self.push(item);
-      cb();
+      if (opt.transform) {
+        opt.transform(item,cb);
+      } else {
+        self.push(item);
+        cb();
+      }
     };
 
     request(item)
