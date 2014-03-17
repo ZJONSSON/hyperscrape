@@ -25,7 +25,9 @@ module.exports = function(cap,opt) {
       buffer +=d;
       cb();
     })
-    .on("finish",callback);
+    .on("finish",function() {
+      setImmediate(callback);
+    });
 
     bufferStream._flush = function(cb) {
       item.response = buffer;
@@ -33,8 +35,8 @@ module.exports = function(cap,opt) {
       if (opt.transform)
         opt.transform.call(this,item);
       else
-        self.push(item);
-      cb();
+        if (item) self.push(item);
+      setImmediate(cb);
     };
 
     request(item)
