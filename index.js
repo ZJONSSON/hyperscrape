@@ -33,7 +33,7 @@ module.exports = function(cap,opt) {
       item.response = buffer;
       item.$ = cheerio.load(buffer);
       if (opt.transform)
-        opt.transform.call(this,item);
+        opt.transform.call(self,item);
       else
         if (item) self.push(item);
       setImmediate(cb);
