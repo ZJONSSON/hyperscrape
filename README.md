@@ -1,3 +1,3 @@
-Hyperscrape is a stream-component that accepts urls from upstream and pushes parsed pages downstream.   If the input is an object that contains an `url` property, a clone of that object will be the prototype for the output object.  Each output object contains `url`, `response`, `responseHeaders` and the cheerio parsed content in `$`.
+Hyperscrape is a stream-component that accepts urls from upstream and pushes parsed pages downstream.   If the input is an object that contains an `url` property, the output will be added to that object.  Each output object contains `url`, `response`, `responseHeaders` and the cheerio parsed content in `$`.
 
-Hyperscrape is initialized by two arguments.  First argument is the maximum number of concurrent requests allowed and the second argument contains options for the hyperquest stream.
+Hyperscrape is initialized by two arguments.  First argument is the maximum number of concurrent requests allowed and the second argument contains options for the hyperquest stream.  If an `url` is defined in the options object, it will be passed on to the stream as the first url to process.
