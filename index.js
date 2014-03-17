@@ -41,7 +41,7 @@ module.exports = function(cap,opt) {
 
     request(item)
       .on('response', function (res) {
-        if (res.statusCode !== 200) return self.emit('error',res.statusCode);
+        if (res.statusCode !== 200) return self.emit('error',{error:res.statusCode,data:item});
         item.responseHeaders = res.headers;
         var encoding = res.headers['content-encoding'];
         if (encoding === 'gzip') res = res.pipe(zlib.createGunzip());
