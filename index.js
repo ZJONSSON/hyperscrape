@@ -10,7 +10,7 @@ module.exports = function(cap,opt) {
   opt = opt || {};
   opt.cap = cap;
 
-  return streamz(function(item,callback) {
+  function process(item,callback) {
     var self = this,
         buffer = "";
 
@@ -49,5 +49,9 @@ module.exports = function(cap,opt) {
         res.pipe(bufferStream);
       })
       .on('error',function(e) { self.emit('error',e); });
-  },opt);
+  }
+
+  var s = streamz(process,opt);
+  if (opt.url) s.write({url:opt.url});
+  return s;
 };
