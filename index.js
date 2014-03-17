@@ -6,12 +6,6 @@ var request = require("request"),
 
 http.globalAgent.maxSockets = Infinity;
 
-function clone(d,e) {
-  e = e || {};
-  e.__proto__ = d;
-  return e;
-}
-
 module.exports = function(cap,opt) {
   opt = opt || {};
   opt.cap = cap;
@@ -20,11 +14,8 @@ module.exports = function(cap,opt) {
     var self = this,
         buffer = "";
 
-    if (item.url && !opt.noClone) item = clone(item);
-    else item = {url:item};
-
-    // Hardcode the url just in case it was cloned (request requires this)
-    item.url = item.url ;
+    if (typeof item === 'string')
+      item = {url : item};
 
     // Make gzip,deflate a default encoding
     item.headers = item.headers || {};
