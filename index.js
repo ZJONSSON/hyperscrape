@@ -41,14 +41,20 @@ module.exports = function(cap,opt) {
 
     request(item)
       .on('response', function (res) {
-        if (res.statusCode !== 200) return self.emit('error',{error:res.statusCode,data:item});
+        if (res.statusCode !== 200) {
+          self.emit('warning',{error:res.statusCode,data:item});
+          return callback();
+        }
         item.responseHeaders = res.headers;
         var encoding = res.headers['content-encoding'];
         if (encoding === 'gzip') res = res.pipe(zlib.createGunzip());
         if (encoding == 'deflate') res = res.pipe(zlib.createInflate());
         res.pipe(bufferStream);
       })
-      .on('error',function(e) { self.emit('error',e); });
+      .on('error',function(e) {
+        self.emit('warning',{error:e,data:item});
+        callback();
+      });
   }
 
   var s = streamz(process,opt);
