@@ -47,6 +47,7 @@ module.exports = function(cap,opt) {
           return callback();
         }
         item.responseHeaders = res.headers;
+        self.emit('response',res);
         var encoding = res.headers['content-encoding'];
         if (encoding === 'gzip') res = res.pipe(zlib.createGunzip());
         if (encoding == 'deflate') res = res.pipe(zlib.createInflate());
