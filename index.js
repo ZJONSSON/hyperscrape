@@ -31,7 +31,8 @@ module.exports = function(cap,opt) {
 
     bufferStream._flush = function(cb) {
       item.response = buffer;
-      item.$ = cheerio.load(buffer);
+      if (item.cheerio !== false)
+        item.$ = cheerio.load(buffer);
       if (opt.transform)
         opt.transform.call(self,item);
       else
