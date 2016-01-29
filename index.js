@@ -21,9 +21,8 @@ module.exports = function(cap,opt) {
     item.headers = item.headers || {};
     item.headers['Accept-Encoding'] = item.headers['Accept-Encoding'] || 'gzip,deflate';
 
-    var bufferStream = streamz(function(d,cb) {
+    var bufferStream = streamz(function(d) {
       buffer +=d;
-      cb();
     })
     .on('finish',function() {
       setImmediate(callback);
