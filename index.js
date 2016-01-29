@@ -1,6 +1,6 @@
-var request = require("request"),
-    cheerio = require("cheerio"),
-    streamz = require("streamz"),
+var request = require('request'),
+    cheerio = require('cheerio'),
+    streamz = require('streamz'),
     zlib = require('zlib'),
     http = require('http');
 
@@ -12,7 +12,7 @@ module.exports = function(cap,opt) {
 
   function process(item,callback) {
     var self = this,
-        buffer = "";
+        buffer = '';
 
     if (typeof item === 'string')
       item = {url : item};
@@ -25,7 +25,7 @@ module.exports = function(cap,opt) {
       buffer +=d;
       cb();
     })
-    .on("finish",function() {
+    .on('finish',function() {
       setImmediate(callback);
     });
 
